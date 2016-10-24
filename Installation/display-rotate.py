@@ -31,10 +31,19 @@ def delete_words(words, path):#words is a list of possible strings you want to s
     document.close()
     document = open(path, "w")
     for line in lines:
-        splitline=line.split()
-        for word in splitline:
-            if word not in words:
-                document.write(line)
+        if line[0] != "#":
+            line_copy=line
+            splitline = line.split()
+            for word in splitline:
+                if word not in words:
+                    flag=True
+                else:
+                    flag=False
+                    break
+            if flag:
+                document.write(line_copy)
+                flag=False
+            
     document.close()
 
 print("You are going to rotate the screen and the touch panel 90º, 180º or 270º")
@@ -60,6 +69,5 @@ elif str == "270":
     document.write("\ndisplay_rotate=3")
     rotate_touch("1 0")
 
-docuemnt.close()
+document.close()
 
-os.remove("/boot/doc_temp.txt")
