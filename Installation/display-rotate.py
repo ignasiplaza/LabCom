@@ -21,7 +21,7 @@ def rotate_touch(position):
     xinput_script.write("xinput set-prop 'FT5406 memory based driver' 'Evdev Axes Swap' 1\n")
     xinput_script.write("xinput --set-prop 'FT5406 memory based driver' 'Evdev Axis Inversion'" + position + "\n")
     xinput_script.close()
-    autostart = open("/home/pi/.config/lxsession/LXDE-pi/autostart/touch-rotate.sh", "a")
+    autostart = open("/home/pi/.config/lxsession/LXDE-pi/autostart", "a")
     autostart.write("@/usr/local/bin/touch-rotate.sh")
     autostart.close()
     
@@ -47,9 +47,9 @@ elif str == "270":
 document.close()
 doc_temp.close()
 doc_temp = open("/boot/doc_temp.txt", "r")
-document = open("boot/config.txt", "w")
+document = open("/boot/config.txt", "w")
 for line in doc_temp.readlines():
     document.write(line)
 document.close()
 doc_temp.close()
-os.remove("boot/doc_temp.txt")
+os.remove("/boot/doc_temp.txt")
