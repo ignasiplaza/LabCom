@@ -8,12 +8,10 @@
 
 import os
 
-print("You are going to rotate the screen and the touch panel 90º, 180º or 270º")
-str = ""
-options = ["90","180","270"]
-words = ["lcd_rotate=2","display_rotate=0","display_rotate=1","display_rotate=2","display_rotate=3","display_rotate=0x10000","display_rotate=0x20000"]
-document = open("/boot/config.txt", "r")
-doc_temp = open("/boot/doc_temp.txt", "w")
+def make_executable(path):
+    mode = os.stat(path).st_mode
+    mode |= (mode & 0o444) >> 2
+    os.chmod(path, mode)
 
 def rotate_touch(position):
     xinput_script = open("/usr/local/bin/touch-rotate.sh", "w")
@@ -21,41 +19,47 @@ def rotate_touch(position):
     xinput_script.write("xinput set-prop 'FT5406 memory based driver' 'Evdev Axes Swap' 1\n")
     xinput_script.write("xinput --set-prop 'FT5406 memory based driver' 'Evdev Axis Inversion' " + position + "\n")
     xinput_script.close()
+    delete_words(["@/usr/local/bin/touch-rotate.sh"],"/home/pi/.config/lxsession/LXDE-pi/autostart" )
     autostart = open("/home/pi/.config/lxsession/LXDE-pi/autostart", "a")
     autostart.write("@/usr/local/bin/touch-rotate.sh")
     autostart.close()
     make_executable("/usr/local/bin/touch-rotate.sh")
 
-def make_executable(path):
-    mode = os.stat(path).st_mode
-    mode |= (mode & 0o444) >> 2
-    os.chmod(path, mode)
-    
-while str not in options: 
+def delete_words(words, path):#words is a list of possible strings you want to substract
+    document = open(path, "r")
+    lines = document.readlines()
+    document.close()
+    document = open(path, "w")
+    for line in lines:
+        splitline=line.split()
+        for word in splitline:
+            if word not in words:
+                document.write(line)
+    document.close()
+
+print("You are going to rotate the screen and the touch panel 90º, 180º or 270º")
+
+str = ""
+words = ["lcd_rotate=2","display_rotate=0","display_rotate=1","display_rotate=2","display_rotate=3","display_rotate=0x10000","display_rotate=0x20000"]
+
+while str not in ["90","180","270"]: 
     str = input("Please Write 90, 180 or 270: ")
 
-for line in document.readlines():
-    splitline=line.split()
-    for word in splitline:
-        if word not in words:
-            doc_temp.write(line)
-        
+delete_words(words,"/boot/config.txt")
+document = open("/boot/config.txt", "a")
+
 if str == "90":
-    doc_temp.write("\ndisplay_rotate=1")
-    rotate_touch("0 1")    
+    document.write("\ndisplay_rotate=1")
+    rotate_touch("0 1")
+    
 elif str == "180":
-    doc_temp.write("\nlcd_rotate=2")
+    document.write("\nlcd_rotate=2")
+    delete_words(["@/usr/local/bin/touch-rotate.sh"],"/home/pi/.config/lxsession/LXDE-pi/autostart" )
     
 elif str == "270":
-    doc_temp.write("\ndisplay_rotate=3")
-    rotate_touch("1 0") 
+    document.write("\ndisplay_rotate=3")
+    rotate_touch("1 0")
 
-document.close()
-doc_temp.close()
-doc_temp = open("/boot/doc_temp.txt", "r")
-document = open("/boot/config.txt", "w")
-for line in doc_temp.readlines():
-    document.write(line)
-document.close()
-doc_temp.close()
+docuemnt.close()
+
 os.remove("/boot/doc_temp.txt")
