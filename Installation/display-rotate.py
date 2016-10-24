@@ -24,6 +24,12 @@ def rotate_touch(position):
     autostart = open("/home/pi/.config/lxsession/LXDE-pi/autostart", "a")
     autostart.write("@/usr/local/bin/touch-rotate.sh")
     autostart.close()
+    make_executable("/usr/local/bin/touch-rotate.sh")
+
+def make_executable(path):
+    mode = os.stat(path).st_mode
+    mode |= (mode & 0o444) >> 2
+    os.chmod(path, mode)
     
 while str not in options: 
     str = input("Please Write 90, 180 or 270: ")
