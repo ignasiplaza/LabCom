@@ -30,6 +30,7 @@ def delete_words(words, path):#words is a list of possible strings you want to s
     lines = document.readlines()
     document.close()
     document = open(path, "w")
+    flag=False
     for line in lines:
         if line[0] != "#":
             line_copy=line
@@ -41,10 +42,13 @@ def delete_words(words, path):#words is a list of possible strings you want to s
                     flag=False
                     break
             if flag:
-                document.write(line_copy)
+                document.write("\n" + line_copy + "\n")
                 flag=False
+        else:
+            document.write(line)
             
     document.close()
+
 
 print("You are going to rotate the screen and the touch panel 90º, 180º or 270º")
 
