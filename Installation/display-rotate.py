@@ -49,7 +49,7 @@ def rotate_touch(position): #This function rotates the touch panel coordinates
     make_executable("/usr/local/bin/touch-rotate.sh") #make it executable
 
 
-print("You are going to rotate the screen and the touch panel 0º, 90º, 180º or 270º")
+print("You are going to rotate the screen and the touch panel 0º, 90º, 180º or 270º\nWe are preparing your Raspberry, please wait")
 
 check_call(['apt-get', 'install', '-y', 'xinput'],stdout=open(os.devnull,'wb'),stderr=STDOUT)
 
@@ -84,7 +84,7 @@ while str not in ["yes", "y", "no", "n"]: #asks the user to reboot the pi
     str = input("The changes you have made requiere the Raspberry Pi to be rebooted to take effect.\nWould you like to reboot now? [y/n]")
     if str == "n" or str == "no":
         pass
-    elif str == "yes" or str == "yes":
-        os.system('sudo shutdown -r now)
+    elif str == "yes" or str == "y":
+        os.system('sudo shutdown -r now')
         
 
