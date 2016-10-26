@@ -12,7 +12,7 @@ def make_executable(path): #This function adds execution permissions to a file
     mode |= (mode & 0o444) >> 2
     os.chmod(path, mode)
 
-def delete_words(words, path): #this functions deletes all file lines containig a word from the list words
+def delete_words(words, path): #This functions deletes all file lines containig a word from the list words
     document = open(path, "r")     
     lines = document.readlines()
     document.close()
@@ -49,7 +49,7 @@ def rotate_touch(position): #This function rotates the touch panel coordinates
     make_executable("/usr/local/bin/touch-rotate.sh") #make it executable
 
 
-print("You are going to rotate the screen and the touch panel 90º, 180º or 270º")
+print("You are going to rotate the screen and the touch panel 0º, 90º, 180º or 270º")
 
 check_call(['apt-get', 'install', '-y', 'xinput'],stdout=open(os.devnull,'wb'),stderr=STDOUT)
 
@@ -79,4 +79,12 @@ elif str == "270":
     rotate_touch("1 0")
 
 document.close()
+
+while str not in ["yes", "y", "no", "n"]: #asks the user to reboot the pi
+    str = input("The changes you have made requiere the Raspberry Pi to be rebooted to take effect.\nWould you like to reboot now? [y/n]")
+    if str == "n" or str == "no":
+        pass
+    elif str == "yes" or str == "yes":
+        os.system('sudo shutdown -r now)
+        
 
